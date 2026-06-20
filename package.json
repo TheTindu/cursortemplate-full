@@ -1,0 +1,25 @@
+{
+  "name": "my-project",
+  "version": "0.1.0",
+  "description": "TODO: describe your project",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "lint": "biome check .",
+    "lint:fix": "biome check --write .",
+    "format": "biome format --write .",
+    "typecheck": "tsc --noEmit && tsc -p src/frontend/tsconfig.json --noEmit"
+  },
+  "workspaces": [
+    "src/frontend",
+    "src/backend",
+    "src/shared"
+  ],
+  "engines": {
+    "node": ">=20.0.0"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "^2.5.0",
+    "typescript": "^6.0.3"
+  }
+}

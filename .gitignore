@@ -1,0 +1,27 @@
+# Dependencies
+node_modules/
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# Build output
+dist/
+build/
+.next/
+out/
+
+# SQLite data
+src/backend/data/
+
+# Logs
+*.log
+npm-debug.log*
+
+# Editor
+.DS_Store
+*.swp
+
+# Keep shared VS Code / Cursor workspace config (.vscode/settings.json,
+# .vscode/extensions.json) committed so the team shares formatter settings.
