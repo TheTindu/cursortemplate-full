@@ -3,8 +3,8 @@ import { createApp } from './app.js';
 import { config } from './config.js';
 import { openDatabase } from './db.js';
 
-const db = openDatabase(config.DATABASE_PATH);
-const app = createApp(db);
+openDatabase(config.DATABASE_PATH);
+const app = createApp();
 
 serve(
   {

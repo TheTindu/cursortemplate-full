@@ -8,7 +8,7 @@
 
 ## System Overview
 
-A single-user todo app that runs locally. A React SPA talks over HTTP to a Hono API, which persists Tasks to a local SQLite file. No auth, no accounts — the single user is implicit.
+A React SPA talks over HTTP to a Hono API, which persists data to a local SQLite file.
 
 ```
 ┌──────────────┐         ┌──────────────┐         ┌──────────────┐
@@ -18,8 +18,6 @@ A single-user todo app that runs locally. A React SPA talks over HTTP to a Hono 
 └──────────────┘         └──────────────┘         └──────────────┘
 ```
 
-Filtering (All / Active / Completed) and the Remaining count are computed client-side; the API is plain CRUD. See [ADR-002](decisions/ADR-002-client-server-sqlite-for-demo.md) and [ADR-003](decisions/ADR-003-stack-hono-react-sqlite.md).
-
 ---
 
 ## Tech Stack
@@ -28,12 +26,12 @@ Filtering (All / Active / Completed) and the Remaining count are computed client
 |-------|------------|----------|
 | Frontend | React + Vite (TypeScript) | [ADR-003](decisions/ADR-003-stack-hono-react-sqlite.md) |
 | Styling | Tailwind CSS v4 | [ADR-003](decisions/ADR-003-stack-hono-react-sqlite.md) |
-| Server state | TanStack Query (optimistic mutations) | [ADR-003](decisions/ADR-003-stack-hono-react-sqlite.md) |
+| Server state | TanStack Query | [ADR-003](decisions/ADR-003-stack-hono-react-sqlite.md) |
 | Backend | Node.js 20 + Hono (`@hono/node-server`) | [ADR-003](decisions/ADR-003-stack-hono-react-sqlite.md) |
 | Validation | Zod + `@hono/zod-validator` | [ADR-001](decisions/ADR-001-typescript-conventions.md) |
 | Database | SQLite via `better-sqlite3` | [ADR-002](decisions/ADR-002-client-server-sqlite-for-demo.md), [ADR-003](decisions/ADR-003-stack-hono-react-sqlite.md) |
 | Auth | None (single-user, local) | [ADR-002](decisions/ADR-002-client-server-sqlite-for-demo.md) |
-| Tests | Vitest (shared schemas + API integration) | |
+| Tests | Vitest | |
 | Hosting / Infra | Local only (demo) | |
 | CI/CD | GitHub Actions — lint + typecheck | `.github/workflows/ci.yml` |
 
@@ -43,11 +41,11 @@ Filtering (All / Active / Completed) and the Remaining count are computed client
 
 ```
 src/
-├── frontend/     ← React + Vite SPA (UI, TanStack Query, optimistic updates)
+├── frontend/     ← React + Vite SPA
 │   └── ...
 ├── backend/      ← Hono API + better-sqlite3 persistence
 │   └── ...
-└── shared/       ← Zod schemas + inferred types for the Task contract
+└── shared/       ← Shared types, utils, contracts
     └── ...
 ```
 
@@ -59,18 +57,6 @@ src/
 - Base path: `/api/v1/`
 - Auth: none (single-user, local — see [ADR-002](decisions/ADR-002-client-server-sqlite-for-demo.md)).
 - Validation: every request body / params validated with Zod (`@hono/zod-validator`) at the boundary.
-
-### Endpoints
-
-| Method | Path | Body | Description |
-|--------|------|------|-------------|
-| `GET` | `/api/v1/tasks` | — | List all Tasks, ordered by creation (oldest first). |
-| `POST` | `/api/v1/tasks` | `{ title }` | Create a Task. Returns the created Task. |
-| `PATCH` | `/api/v1/tasks/:id` | `{ title?, completed? }` | Update a Task's title and/or completed state. |
-| `DELETE` | `/api/v1/tasks/:id` | — | Hard-delete a Task. |
-| `DELETE` | `/api/v1/tasks` | — | Hard-delete all Completed Tasks (clear completed). |
-
-Filtering and the Remaining count are **not** server concerns — the client fetches all Tasks and derives both in memory.
 
 - Error format:
   ```json
@@ -85,31 +71,6 @@ Filtering and the Remaining count are **not** server concerns — the client fet
 
 ---
 
-## Data Model
-
-A single entity. See `docs/CONTEXT.md` for the domain glossary.
-
-| Entity | Description |
-|--------|-------------|
-| `Task` | A thing the user intends to do. The list is an ordered collection of Tasks. |
-
-**`Task` fields**
-
-| Field | Type | Notes |
-|-------|------|-------|
-| `id` | integer (autoincrement) | Primary key; also defines creation order. |
-| `title` | text | Trimmed, non-empty, ≤ 500 chars. Duplicates allowed. |
-| `completed` | boolean (0/1) | `false` = Active, `true` = Completed. Reversible. |
-| `createdAt` | ISO 8601 string | Set on creation. |
-
----
-
-## Authentication & Authorisation
-
-None. The app is single-user and runs locally, so there are no accounts, sessions, or permissions. See [ADR-002](decisions/ADR-002-client-server-sqlite-for-demo.md).
-
----
-
 ## Environment Variables
 
 > Document every env var the application reads. Group by concern.
@@ -120,7 +81,7 @@ NODE_ENV=development          # development | production | test
 
 # Backend (Hono)
 PORT=3000                     # API server port
-DATABASE_PATH=./data/todo.db  # SQLite file location (created if missing)
+DATABASE_PATH=./data/app.db   # SQLite file location (created if missing)
 
 # Frontend (Vite) — only VITE_-prefixed vars are exposed to the client
 VITE_API_BASE_URL=/api/v1     # API base; in dev, Vite proxies this to the backend
