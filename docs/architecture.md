@@ -27,7 +27,7 @@ A React SPA talks over HTTP to a Hono API, which persists data to a local SQLite
 | Frontend | React + Vite (TypeScript) | [ADR-003](decisions/ADR-003-stack-hono-react-sqlite.md) |
 | Styling | Tailwind CSS v4 | [ADR-003](decisions/ADR-003-stack-hono-react-sqlite.md) |
 | Server state | TanStack Query | [ADR-003](decisions/ADR-003-stack-hono-react-sqlite.md) |
-| Backend | Node.js 20 + Hono (`@hono/node-server`) | [ADR-003](decisions/ADR-003-stack-hono-react-sqlite.md) |
+| Backend | Node.js 22 + Hono (`@hono/node-server`) | [ADR-003](decisions/ADR-003-stack-hono-react-sqlite.md) |
 | Validation | Zod + `@hono/zod-validator` | [ADR-001](decisions/ADR-001-typescript-conventions.md) |
 | Database | SQLite via `better-sqlite3` | [ADR-002](decisions/ADR-002-client-server-sqlite-for-demo.md), [ADR-003](decisions/ADR-003-stack-hono-react-sqlite.md) |
 | Auth | None (single-user, local) | [ADR-002](decisions/ADR-002-client-server-sqlite-for-demo.md) |
