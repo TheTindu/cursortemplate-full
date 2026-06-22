@@ -18,8 +18,8 @@
 │   ├── CONTEXT.md          ← Domain glossary (ubiquitous language).
 │   └── decisions/          ← Architecture Decision Records (ADRs).
 ├── src/
-│   ├── frontend/           ← Frontend application (framework TBD).
-│   ├── backend/            ← Backend application (framework TBD).
+│   ├── frontend/           ← Frontend application (React + Vite).
+│   ├── backend/            ← Backend application (Hono + better-sqlite3).
 │   └── shared/             ← Shared package (types, utils, contracts) used by both frontend and backend.
 ├── .agents/skills/         ← Agent skills (cross-tool).
 ├── .cursor/
@@ -55,6 +55,7 @@ Full context lives in `docs/` — read the relevant file before making changes, 
 - Validate all external input at the API boundary.
 - Validate required env vars at startup — centralise in a config module, never read `process.env.X` inline.
 - Never hardcode secrets. Document new env vars in `docs/architecture.md`.
+- Run TypeScript with `tsx` — never `node file.ts` directly. Add `tsx` as a devDependency.
 - TypeScript/Node style (naming, types, functions, error handling): see `.cursor/rules/typescript.mdc`.
 
 ## Commands
@@ -79,6 +80,24 @@ Full context lives in `docs/` — read the relevant file before making changes, 
 - If a feature touches auth, payments, or personal data, stop and confirm scope.
 - Check whether a `.agents/skills/` skill already covers the task.
 - Don't add new dependencies without checking what is already installed.
+
+---
+
+## After Scaffolding a Runnable App
+
+Typecheck and lint passing does NOT mean the app runs. Always verify it actually starts before declaring done — do not rely on typecheck or tests alone.
+
+**Backend:**
+1. Start the server (`npm run dev` or equivalent).
+2. Confirm it outputs a listening message (e.g. `Server listening on http://localhost:...`).
+3. Hit at least one endpoint with `curl` or equivalent and confirm a valid response.
+
+**Frontend:**
+1. Start the dev server (`npm run dev`) and confirm it serves without errors.
+2. Confirm the page renders with no runtime/console errors.
+3. Confirm `npm run build` succeeds — build-time failures don't always show in typecheck.
+
+If it fails to start, fix the error before closing the task.
 
 ---
 

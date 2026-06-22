@@ -48,3 +48,4 @@ alwaysApply: false
 - Dev script convention: `"dev": "tsx --watch src/index.ts"`
 - One-off script convention: `"start": "tsx src/index.ts"`
 - `tsc --noEmit` is for type-checking only, not for building runnable output.
+- After scaffolding any runnable app (backend or frontend), run it and confirm it actually starts before declaring done — do not rely on typecheck or tests alone. For a backend, confirm it listens and serves a request; for a frontend, confirm the dev server starts, the page renders without console errors, and `npm run build` succeeds.
